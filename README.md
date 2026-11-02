@@ -22,7 +22,9 @@ The APK is written to `fermata/build/outputs/apk_from_bundle/autoRelease/`. Test
 
 ## Validation — November 2, 2026
 
-The ARM64 release APK builds successfully and is 3,343,143 bytes (3.19 MiB). All three regression tests and the release vital lint check pass. APK inspection verifies the separate package/label, API 36 target, and fused modules `base,web`. APK signature verification passes. No phone is connected, so playback, sign-in, layout, and vehicle behavior remain untested. Existing upstream resource/manifest and Gradle deprecation warnings remain.
+The ARM64 release APK builds successfully and is 3,343,143 bytes (3.19 MiB). All three regression tests and the release vital lint check pass. APK inspection verifies the separate package/label, API 36 target, and fused modules `base,web`. APK signature verification passes. Existing upstream resource/manifest and Gradle deprecation warnings remain.
+
+The exact APK was also tested on an Android 16 / API 36 x86_64 emulator with WebView 133.0.6943.137. Installation, launch, anonymous YouTube search/video playback, portrait/landscape fullscreen, media-key pause/resume, Back, settings, and recovery after a network loss using Menu > Refresh passed. No app crash or app ANR was logged. Initial buffering was slow, and some thumbnails were initially blank; homepage thumbnails rendered after loading settled. Nonfatal WebView resource errors were logged. Phone/car compatibility, sign-in, audible sound, Android Auto, and moving-car playback remain unverified. See [runtime test results](docs/runtime-test-results.txt) for scope and limitations.
 
 The test APK is copied to `dist/Fermata-YouTube-Lite-2.0.2-test.apk`. Its SHA-256 is `5A952ACD3899C45FFA904568EEE82BC207ED083204A80DF79B05530D0A0C6022`.
 

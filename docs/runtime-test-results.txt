@@ -1,0 +1,75 @@
+Fermata YouTube Lite runtime test results
+Date: November 2, 2026
+
+Artifact
+The exact distributed test APK was used without rebuilding or changing app code.
+Package: me.aap.fermata.youtubelite.auto
+Version: 2.0.2 (268)
+Size: 3,343,143 bytes (3.19 MiB)
+SHA-256: 5A952ACD3899C45FFA904568EEE82BC207ED083204A80DF79B05530D0A0C6022
+
+Environment
+Android 16 / API 36 Google APIs x86_64 emulator, system image revision 7.
+Android System WebView: 133.0.6943.137.
+The emulator used WHPX acceleration and a software graphics renderer.
+Portrait resolution was 720 x 1280; landscape was 1280 x 720.
+Emulator sound output was disabled. No Google account was used.
+
+Passed runtime checks
+1. Fresh APK installation succeeded.
+2. Cold app launch succeeded. Android reported 1,836 ms for the first activity
+   launch and 1,227 ms for a subsequent process relaunch. These times do not
+   measure completion of the YouTube web page or video buffering.
+3. The YouTube home interface loaded after denying notification permission.
+4. Text search for "Big Buck Bunny" returned YouTube results.
+5. The official Blender Foundation "Big Buck Bunny 60fps 4K" video played.
+   Multiple screenshots showed different rendered video frames.
+6. Fullscreen video rendered in portrait and landscape. The landscape screenshot
+   shows video across the 1280 x 720 display.
+7. Media-key pause changed the media session to PAUSED(2). Its position remained
+   at 166,851 ms across repeated checks. Play changed it to PLAYING(3), beginning
+   from 166,941 ms.
+8. Back returned from the video to the results page without an app crash.
+9. Settings opened and showed the reduced Interface and Addons sections.
+10. With only the emulator's network disabled, the default network became none
+    and Refresh displayed net::ERR_INTERNET_DISCONNECTED without an app crash.
+11. After restoring the emulator's network, Menu > Refresh restored the results.
+    Selecting the video again produced PLAYING(3) with video metadata and frames.
+12. Process relaunch succeeded with the same installed APK.
+
+Stability and memory
+The Android crash buffer was empty at the end of testing. No crash or ANR event
+for me.aap.fermata.youtubelite.auto was found. The fresh emulator boot did log
+unrelated Google services/background-app ANRs.
+
+One main-app-process memory sample during playback reported 88,346 KiB total
+PSS and 19,279 KiB swap PSS. This excludes the separate WebView renderer and
+system/GPU processes and is not a total memory requirement or a Moto G85 result.
+
+Observed limitations
+Initial page/video loading and buffering were slow on the fresh emulator.
+Some search thumbnails were initially blank; homepage thumbnails rendered after
+loading settled. Nonfatal ERR_BLOCKED_BY_ORB and ERR_FAILED resource errors
+appeared in the WebView logs. Their cause was not established.
+Network recovery was tested with manual Menu > Refresh, not automatic recovery.
+
+Not verified
+- The physical Moto G85 5G and its installed WebView version.
+- Maruti Suzuki Victoris Android Auto launcher visibility or rendering.
+- Wired or wireless Android Auto, car reconnection, or video while moving.
+- Google/YouTube sign-in, protected or paid content, and audible sound output.
+- Car speakers, Bluetooth audio, and steering-wheel or head-unit touch controls.
+
+Earlier checks
+The three YouTube-only regression tests, release vital lint check, APK signature
+verification, and fused-module inspection passed. The APK contains base and web
+modules and no native libraries. Runtime testing did not change its code or hash.
+
+Evidence
+Screenshots and selected logs are saved locally in dist/test-evidence/.
+landscape-ready.png shows actual fullscreen video playback.
+offline.png shows the expected offline error.
+reconnected.png and reconnect-playing.png show recovery and subsequent playback.
+
+These tests establish basic app behavior in an Android 16 emulator. They do not
+establish compatibility with the user's phone, vehicle, or moving-car playback.
