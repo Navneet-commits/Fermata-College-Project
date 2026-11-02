@@ -328,41 +328,7 @@ public class MainActivityDelegate extends ActivityDelegate
 	}
 
 	private void defaultIntent() {
-		if (getActiveFragment() != null) {
-			checkUpdates();
-			return;
-		}
-
-		String showAddon = getPrefs().getShowAddonOnStartPref();
-		if (showAddon != null) {
-			FermataAddon addon = AddonManager.get().getAddon(showAddon);
-
-			if (addon instanceof FermataFragmentAddon) {
-				showFragment(((FermataFragmentAddon) addon).getFragmentId());
-				checkUpdates();
-				return;
-			}
-		}
-
-		FutureSupplier<Boolean> f = goToCurrent().onCompletion((ok, fail1) -> {
-			if ((fail1 != null) && !isCancellation(fail1)) {
-				Log.e(fail1, "Last played track not found");
-			}
-			if ((ok == null) || !ok) showFragment(R.id.folders_fragment);
-			checkUpdates();
-		});
-
-		if (!f.isDone() || f.isFailed() || !Boolean.TRUE.equals(f.peek())) {
-			showFragment(R.id.folders_fragment);
-			setContentLoading(f);
-		}
-	}
-
-	private void checkUpdates() {
-		if (!AUTO) return;
-		if (getAppActivity() instanceof MainActivity a) a.uninstallControl().thenRun(() -> {
-			if (getPrefs().getCheckUpdatesPref()) a.checkUpdates();
-		});
+		if (getActiveFragment() == null) showFragment(R.id.youtube_fragment);
 	}
 
 	@Override
@@ -692,7 +658,7 @@ public class MainActivityDelegate extends ActivityDelegate
 
 	public void backToNavFragment() {
 		int id = getActiveNavItemId();
-		showFragment((id == ID_NULL) ? R.id.folders_fragment : id);
+		showFragment((id == ID_NULL) ? R.id.youtube_fragment : id);
 	}
 
 	@Override
@@ -703,6 +669,8 @@ public class MainActivityDelegate extends ActivityDelegate
 	@Nullable
 	@Override
 	public ActivityFragment showFragment(int id, Object input) {
+		if ((id == R.id.folders_fragment) || (id == R.id.favorites_fragment) ||
+				(id == R.id.playlists_fragment)) id = R.id.youtube_fragment;
 		BodyLayout b = getBody();
 		if (b.isVideoMode()) b.setMode(BodyLayout.Mode.BOTH);
 		return super.showFragment(id, input);
@@ -1022,20 +990,8 @@ public class MainActivityDelegate extends ActivityDelegate
 
 	private static String[] getRequiredPermissions() {
 		List<String> perms = new ArrayList<>();
-		perms.add(permission.READ_EXTERNAL_STORAGE);
-		if (VERSION.SDK_INT >= VERSION_CODES.P) {
-			perms.add(permission.FOREGROUND_SERVICE);
-		}
-		if (VERSION.SDK_INT >= VERSION_CODES.Q) {
-			perms.add(permission.ACCESS_MEDIA_LOCATION);
-			perms.add(permission.USE_FULL_SCREEN_INTENT);
-		}
 		if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
-			perms.add(permission.USE_FULL_SCREEN_INTENT);
 			perms.add(permission.POST_NOTIFICATIONS);
-		}
-		if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-			perms.add(permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK);
 		}
 		return perms.toArray(new String[0]);
 	}

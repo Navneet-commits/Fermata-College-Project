@@ -5,10 +5,10 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
+import java.net.URI;
+import java.util.Locale;
+
 import me.aap.fermata.addon.web.FermataWebClient;
-import me.aap.fermata.addon.web.WebBrowserFragment;
-import me.aap.fermata.ui.activity.MainActivityDelegate;
-import me.aap.utils.log.Log;
 
 /**
  * @author Andrey Pavlenko
@@ -17,20 +17,23 @@ public class YoutubeWebClient extends FermataWebClient {
 
 	@Override
 	public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull WebResourceRequest request) {
-		if (!isYoutubeUri(request.getUrl())) {
-			MainActivityDelegate a = MainActivityDelegate.get(view.getContext());
+		return request.isForMainFrame() && !isAllowedPage(request.getUrl().toString());
+	}
 
-			try {
-				if (!(a.showFragment(
-						me.aap.fermata.R.id.web_browser_fragment) instanceof WebBrowserFragment f))
-					return false;
-				f.loadUrl(request.getUrl().toString());
-				return true;
-			} catch (IllegalArgumentException ex) {
-				Log.d(ex);
-			}
+	static boolean isAllowedPage(String url) {
+		if (url == null) return false;
+		try {
+			URI uri = URI.create(url);
+			if (!"https".equalsIgnoreCase(uri.getScheme()) || uri.getHost() == null ||
+					uri.getRawUserInfo() != null || (uri.getPort() != -1 && uri.getPort() != 443))
+				return false;
+			return switch (uri.getHost().toLowerCase(Locale.ROOT)) {
+				case "youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be",
+						"accounts.google.com", "accounts.youtube.com", "consent.youtube.com" -> true;
+				default -> false;
+			};
+		} catch (IllegalArgumentException ex) {
+			return false;
 		}
-
-		return false;
 	}
 }

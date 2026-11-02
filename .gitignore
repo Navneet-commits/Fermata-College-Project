@@ -5,6 +5,7 @@
 .project
 .classpath
 build/
+build-youtube.log
 dist/
 .cxx/
 *.iml

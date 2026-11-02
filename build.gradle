@@ -152,6 +152,8 @@ gradle.projectsEvaluated {
         }
     }
 
+    addons.removeAll { it.name != 'youtube' }
+
     def addonInfo = new StringBuilder(1024)
     addonInfo.append('me.aap.utils.collection.CollectionUtils.sort(new me.aap.fermata.addon.AddonInfo[] {\n')
     addons.forEach {

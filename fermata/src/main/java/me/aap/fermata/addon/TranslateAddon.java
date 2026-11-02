@@ -39,7 +39,6 @@ public class TranslateAddon implements FermataAddon {
 	);
 	public static final Pref<Supplier<String>> IMPL =
 			Pref.s("TRANSLATOR", "me.aap.fermata.opusmt.OpusMtTranslateAddon");
-	private static final AddonInfo info = FermataAddon.findAddonInfo(TranslateAddon.class.getName());
 	private final CacheMap<String, FutureSupplier<Translator>> cache = new CacheMap<>(30);
 
 	public static FutureSupplier<TranslateAddon> get() {
@@ -54,7 +53,7 @@ public class TranslateAddon implements FermataAddon {
 	@NonNull
 	@Override
 	public AddonInfo getInfo() {
-		return info;
+		return FermataAddon.findAddonInfo(TranslateAddon.class.getName());
 	}
 
 	@Override

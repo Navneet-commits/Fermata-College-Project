@@ -1,3 +1,35 @@
+# Fermata YouTube Lite — college prototype
+
+This fork packages only Fermata's web module and registers only the YouTube addon. It opens directly to YouTube and replaces the folders, favorites, playlists, and browser navigation with YouTube and a settings menu. Shared Fermata UI and media-service code remain, so this is larger than a minimal WebView wrapper.
+
+VLC, ExoPlayer, IPTV, casting, network/cloud-storage addons, and AI modules are excluded from the build. Release builds enable code and resource shrinking. The default package is `me.aap.fermata.youtubelite.auto`, the label is **Fermata YouTube Lite**, and the default ABI is ARM64 for the Moto G85. It can coexist with upstream Fermata.
+
+## Vehicle compatibility
+
+This fork does not add a motion-lock bypass or establish support for video playback while driving. Android Auto compatibility, playback, fullscreen, sign-in, and reconnect behavior still require testing on the Moto G85 running Android 16 and the Maruti Suzuki Victoris. Built-in wireless Android Auto does not establish compatibility with the alternative adapters described by the upstream maintainer. See [upstream's Android 14+ compatibility discussion](https://github.com/AndreyPavlenko/Fermata/discussions/432).
+
+Use a stationary vehicle or a bench/simulator for the college demonstration. Upstream Android Auto integration is retained without changes. Google may reject sign-in through an embedded browser. Top-level navigation permits only HTTPS YouTube pages and specific Google account/YouTube consent hosts.
+
+## Build and check
+
+Use JDK 21 and Android SDK platform 36. Set `sdk.dir` in the untracked `local.properties` file or configure the Android SDK environment. The existing upstream test signing configuration is for development; production distribution needs a private signing key.
+
+```powershell
+.\gradlew.bat :fermata:packageAutoReleaseUniversalApk :web:testAutoDebugUnitTest
+```
+
+The APK is written to `fermata/build/outputs/apk_from_bundle/autoRelease/`. Tests check the reduced addon registry, shared-class initialization without the removed addons, and navigation/account-flow boundaries. APK size does not measure WebView memory usage.
+
+## Validation — November 2, 2026
+
+The ARM64 release APK builds successfully and is 3,343,143 bytes (3.19 MiB). All three regression tests and the release vital lint check pass. APK inspection verifies the separate package/label, API 36 target, and fused modules `base,web`. APK signature verification passes. No phone is connected, so playback, sign-in, layout, and vehicle behavior remain untested. Existing upstream resource/manifest and Gradle deprecation warnings remain.
+
+The test APK is copied to `dist/Fermata-YouTube-Lite-2.0.2-test.apk`. Its SHA-256 is `5A952ACD3899C45FFA904568EEE82BC207ED083204A80DF79B05530D0A0C6022`.
+
+The original upstream README and GPL-3.0 license are retained below.
+
+---
+
 ## !!!Be aware of scam!!! The sites like https :// fermata-auto . com  are 100% scam. This app is free and opensource!
 
 

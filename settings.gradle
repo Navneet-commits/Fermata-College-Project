@@ -31,6 +31,7 @@ project(':utils').projectDir = file('depends/utils')
 
 file('modules').eachDir {
     def name = ':' + it.name
+    if (name != ':web') return
     if ((':gdrive' == name) && !gradle.ext.enableGoogleServices) return
     gradle.ext.modules.add(name)
     include name

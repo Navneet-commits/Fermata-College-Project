@@ -29,6 +29,7 @@ android {
         release {
             debuggable false
             minifyEnabled true
+            shrinkResources true
             resValue "string", "app_name_auto", "@string/app_name_auto_release"
             resValue "string", "app_name_mobile", "@string/app_name_mobile_release"
             resValue "string", "media_service_name_auto", "@string/media_service_name_auto_release"

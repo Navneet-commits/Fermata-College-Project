@@ -48,7 +48,6 @@ public class SubGenAddon implements FermataAddon {
 			PreferenceStore.Pref.b("SG_TRANSLATE", false);
 	public static final Pref<Supplier<String>> TRANSLATE_LANG = Pref.s("SG_TRANSLATE_LANG",
 			() -> Locale.getDefault().getLanguage());
-	private static final AddonInfo info = FermataAddon.findAddonInfo(SubGenAddon.class.getName());
 	private final CacheMap<Object, Transcriptor> cache = new CacheMap<>(30);
 
 	@Override
@@ -59,7 +58,7 @@ public class SubGenAddon implements FermataAddon {
 	@NonNull
 	@Override
 	public AddonInfo getInfo() {
-		return info;
+		return FermataAddon.findAddonInfo(SubGenAddon.class.getName());
 	}
 
 	@Override

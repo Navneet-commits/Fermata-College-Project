@@ -6,7 +6,6 @@ import static android.view.View.FOCUS_RIGHT;
 import static android.view.View.FOCUS_UP;
 import static me.aap.fermata.BuildConfig.VERSION_CODE;
 import static me.aap.fermata.BuildConfig.VERSION_NAME;
-import static me.aap.utils.collection.CollectionUtils.newLinkedHashSet;
 import static me.aap.utils.ui.UiUtils.isVisible;
 import static me.aap.utils.ui.UiUtils.showInfo;
 import static me.aap.utils.ui.view.NavBarItem.create;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import me.aap.fermata.BuildConfig;
 import me.aap.fermata.FermataApplication;
@@ -39,7 +37,6 @@ import me.aap.fermata.ui.view.BodyLayout;
 import me.aap.fermata.ui.view.ControlPanelView;
 import me.aap.fermata.ui.view.MediaItemListView;
 import me.aap.fermata.util.Utils;
-import me.aap.utils.collection.CollectionUtils;
 import me.aap.utils.function.Supplier;
 import me.aap.utils.holder.IntHolder;
 import me.aap.utils.log.Log;
@@ -114,7 +111,7 @@ public class NavBarMediator extends PrefNavBarMediator
 
 	@Override
 	protected boolean canSwap(NavBarView nb) {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -317,19 +314,7 @@ public class NavBarMediator extends PrefNavBarMediator
 	}
 
 	private Collection<String> getLayout(NavBarView nb) {
-		AddonManager amgr = FermataApplication.get().getAddonManager();
-		Set<String> names = newLinkedHashSet(BuildConfig.ADDONS.length + 4);
-		String[] pref = getPreferenceStore(nb).getStringArrayPref(getPref(nb));
-		CollectionUtils.addAll(names, pref);
-		names.add("folders");
-		names.add("favorites");
-		names.add("playlists");
-		for (AddonInfo ai : BuildConfig.ADDONS) {
-			FermataAddon a = amgr.getAddon(ai.className);
-			if (a instanceof FermataFragmentAddon) names.add(ai.className);
-		}
-		names.add("menu");
-		return names;
+		return List.of("me.aap.fermata.addon.web.yt.YoutubeAddon", "menu");
 	}
 
 	private static String idToName(@IdRes int id) {
